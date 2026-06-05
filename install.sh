@@ -23,7 +23,14 @@ curl -fL \
   "https://www.falstad.com/circuit/offline/circuitjs1-linux64.tgz" \
   | tar --warning=no-unknown-keyword -xzf - -C "$INSTALL_DIR"
 
-[ -x "$INSTALL_DIR/circuitjs1" ] || { echo "Extraction failed — binary not found." >&2; exit 1; }
+BINARY="$INSTALL_DIR/circuitjs1/circuitjs1"
+
+chmod +x "$BINARY" 2>/dev/null || true
+
+[ -x "$BINARY" ] || { echo "Extraction failed — binary not found at $BINARY." >&2; exit 1; }
+
+# Scrub macOS Apple Double metadata — useless on Linux
+find "$INSTALL_DIR" -name '._*' -delete 2>/dev/null || true
 
 echo "Downloading icon..."
 curl -fsSL -o "$INSTALL_DIR/icon.png" \
@@ -34,7 +41,7 @@ cat > "$DESKTOP_DIR/circuitjs1.desktop" <<EOF
 [Desktop Entry]
 Name=Falstad Circuit Simulator
 Comment=Interactive Electronic Circuit Simulator
-Exec=${INSTALL_DIR}/circuitjs1 %F
+Exec=${BINARY} %F
 Icon=${INSTALL_DIR}/icon.png
 Terminal=false
 Type=Application
