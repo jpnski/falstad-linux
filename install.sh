@@ -19,9 +19,9 @@ command -v curl >/dev/null    || { echo "Install curl and re-run." >&2; exit 1; 
 mkdir -p "$INSTALL_DIR" "$DESKTOP_DIR"
 
 echo "Downloading Falstad Circuit Simulator..."
-curl -fsSL --progress-bar \
+curl -fL \
   "https://www.falstad.com/circuit/offline/circuitjs1-linux64.tgz" \
-  | tar -xzf - -C "$INSTALL_DIR"
+  | tar --warning=no-unknown-keyword -xzf - -C "$INSTALL_DIR"
 
 [ -x "$INSTALL_DIR/circuitjs1" ] || { echo "Extraction failed — binary not found." >&2; exit 1; }
 
